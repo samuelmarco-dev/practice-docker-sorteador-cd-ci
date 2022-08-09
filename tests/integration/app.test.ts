@@ -25,4 +25,4 @@ describe("integration test", () => {
     expect(savedStudent).not.toBeNull();
   });
 
-})
+});
