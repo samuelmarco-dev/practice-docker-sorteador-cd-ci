@@ -1,24 +1,21 @@
+#Continuous Integration
 name: pull request (action)
 on: [pull_request]
 jobs:
   pull request (action):
-  runs-on: ubuntu-latest
-  steps:
-  - name: Check out repository code
-    uses: actions/checkout@v3
-  - name: Make a new envfile
-    uses: SpicyPizza/create-envfile@v1
-    with:
-      envkey_POSTGRES_USER: 
-      envkey_POSTGRES_PASSWORD: 
-      envkey_POSTGRES_DB: 
-      envkey_POSTGRES_DATABASE_URL: 
-      file_name: .env.docker.test
-  - name: Run tests
-    run: docker-compose -f docker-compose-tests.yml run node-app-actions npm run test
-  - uses: akhileshns/heroku-deploy@v3.12.12
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+    - name: Make a new envfile
+      uses: SpicyPizza/create-envfile@v1
       with:
-        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-        heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
-        heroku_email: ${{secrets.HEROKU_EMAIL}}
-        branch: "main"
+        envkey_POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+        envkey_POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+        envkey_POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+        envkey_POSTGRES_DATABASE_URL: ${{secrets.POSTGRES_DATABASE_URL}}
+        file_name: .env.docker.test
+    - name: Run tests
+      run: docker-compose -f docker-compose-tests.yml run node-app-actions npm run test
+    - name: Build App
+      run: npm i && npm run build
